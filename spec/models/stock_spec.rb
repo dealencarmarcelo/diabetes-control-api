@@ -3,5 +3,7 @@ require 'shoulda/matchers'
 
 describe Stock, type: :model do
     it { should validate_presence_of(:quantity) }
-    it { should belongs_to :user }
+    
+    it { should belong_to(:stockable) }
+    it { should belong_to(:user) }
 end

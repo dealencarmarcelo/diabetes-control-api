@@ -16,10 +16,13 @@ describe User, type: :model do
     it { should validate_confirmation_of(:password).on(:create) }
 
     it { should validate_presence_of(:phone) }
-    it { should validate_length_of(:phone).is(11) }
+    it { should validate_length_of(:phone).is_equal_to(11) }
     it { should validate_uniqueness_of(:phone) }
 
     it { should validate_presence_of(:birth_date) }
     
     it { should validate_presence_of(:diabetes_discovery_date) }
+
+    it { should have_many(:measurements) }
+    it { should have_many(:stocks) }
 end
