@@ -22,7 +22,7 @@ describe Api::V1::UsersController do
 
     let(:user) { create(:user) }
     
-    describe 'get /users' do
+    describe 'get users' do
         before { get api_v1_users_path }
 
         it { expect(response).to have_http_status(:success) }
