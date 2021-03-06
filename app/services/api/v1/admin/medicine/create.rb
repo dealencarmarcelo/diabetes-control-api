@@ -1,4 +1,4 @@
-class Api::V1::Admin::MedicineType::Create
+class Api::V1::Admin::Medicine::Create
     prepend SimpleCommand
 
     def initialize(create_params)
@@ -6,17 +6,17 @@ class Api::V1::Admin::MedicineType::Create
     end
 
     def call
-        create_medicine_type
+        create_medicine
     end
 
     private
 
     attr_accessor :create_params
 
-    def create_medicine_type
-        medicine_type = MedicineType.new(create_params)
+    def create_medicine
+        medicine = Medicine.new(create_params)
 
-        return medicine_type if medicine_type.save
+        return medicine if medicine.save
 
         errors.add(:base, :failure)
 

@@ -3,15 +3,15 @@ require 'rails_helper'
 describe Api::V1::Admin::MedicineType::Create do
   subject(:context) { described_class.call(create_params) }
 
+  let(:brand) { create(:brand) }
+
   describe '.call' do
     context 'when the context is successful' do
-      let(:name) { Faker::Lorem.words(number: 1).first.titleize }
-      let(:kind) { Faker::Lorem.words(number: 1).first.titleize }
-
       let(:create_params) do
         { 
-          name: name,
-          kind: kind
+          name: Faker::Lorem.words(number: 1).first.titleize,
+          kind: Faker::Lorem.words(number: 1).first.titleize,
+          brand_id: brand.id
         }
       end
       
@@ -21,13 +21,11 @@ describe Api::V1::Admin::MedicineType::Create do
     end
 
     context 'when the context is not successful' do
-      let(:name) { nil }
-      let(:kind) { Faker::Lorem.words(number: 1).first.titleize }
-
       let(:create_params) do
         { 
-          name: name,
-          kind: kind
+          name: nil,
+          kind: Faker::Lorem.words(number: 1).first.titleize,
+          brand_id: brand.id
         }
       end
 

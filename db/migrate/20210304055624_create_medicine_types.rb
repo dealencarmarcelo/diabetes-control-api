@@ -4,6 +4,8 @@ class CreateMedicineTypes < ActiveRecord::Migration[6.0]
       t.string :name
       t.string :kind
 
+      t.references :brand, foreign_key: true
+
       t.timestamps
     end
   end

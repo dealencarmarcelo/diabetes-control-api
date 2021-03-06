@@ -3,14 +3,24 @@ require 'shoulda/matchers'
 
 describe Api::V1::Admin::MedicineTypesController do
     
+    let(:brand) { create(:brand) }
+    let(:medicine_type) { create(:medicine_type) }
+
     let(:params) do 
         {
             name: Faker::Lorem.words(number: 1).first.titleize,
-            kind: Faker::Lorem.words(number: 1).first.titleize
+            kind: Faker::Lorem.words(number: 1).first.titleize,
+            brand_id: brand.id
         }
     end
-    
-    let(:medicine_type) { create(:medicine_type) }
+
+    let(:invalid_params) do 
+        {
+            name: nil,
+            kind: Faker::Lorem.words(number: 1).first.titleize,
+            brand_id: brand.id
+        }
+    end
 
     describe 'get medicine_types' do
         before { get api_v1_admin_medicine_types_path }
@@ -46,25 +56,23 @@ describe Api::V1::Admin::MedicineTypesController do
         context 'when name and kind is valid' do
             let(:json) { JSON.parse(response.body, symbolize_names: true) }
 
-            before { post api_v1_admin_medicine_types_path(medicine_type.id), params: params }
+            before { post api_v1_admin_medicine_types_path, params: params }
 
             it { expect(response).to have_http_status(:created) }
             it { expect(created_medicine_type.name).to eq(json.dig(:name)) }
             it { expect(created_medicine_type.kind).to eq(json.dig(:kind)) }
+            it { expect(created_medicine_type.brand_id).to eq(json.dig(:brand_id)) }
         end
 
-        context 'when name is invalid' do
+        context 'when an attribute is invalid' do
             it 'returns unprocessable_entity with nil name' do
-                post api_v1_admin_medicine_types_path(medicine_type.id), params: { name: nil }
+                post api_v1_admin_medicine_types_path, params: invalid_params
                 expect(response).to have_http_status(:unprocessable_entity)
             end
+        end
 
-            it 'returns unprocessable_entity with nil kind' do
-                post api_v1_admin_medicine_types_path(medicine_type.id), params: { kind: nil }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'do not create an medicine_type' do
+        context 'do not create a medicine type' do
+            it 'returns no method error' do
                 expect { created_medicine_type.name }.to raise_error(NoMethodError)
             end
         end
@@ -84,6 +92,11 @@ describe Api::V1::Admin::MedicineTypesController do
 
             it 'returns unprocessable_entity with invalid kind' do
                 put api_v1_admin_medicine_type_path(medicine_type.id), params: { kind: nil }
+                expect(response).to have_http_status(:unprocessable_entity)
+            end
+
+            it 'returns unprocessable_entity with invalid brand_id' do
+                put api_v1_admin_medicine_type_path(medicine_type.id), params: { brand_id: nil }
                 expect(response).to have_http_status(:unprocessable_entity)
             end
         end
