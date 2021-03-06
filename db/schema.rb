@@ -40,20 +40,20 @@ ActiveRecord::Schema.define(version: 2021_03_04_055707) do
 
   create_table "medicine_types", force: :cascade do |t|
     t.string "name"
-    t.string "type"
+    t.string "kind"
+    t.bigint "brand_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["brand_id"], name: "index_medicine_types_on_brand_id"
   end
 
   create_table "medicines", force: :cascade do |t|
     t.string "name"
     t.integer "content"
     t.string "unit"
-    t.bigint "brand_id"
     t.bigint "medicine_type_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["brand_id"], name: "index_medicines_on_brand_id"
     t.index ["medicine_type_id"], name: "index_medicines_on_medicine_type_id"
   end
 
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 2021_03_04_055707) do
 
   add_foreign_key "consumptions", "stocks"
   add_foreign_key "measurements", "users"
-  add_foreign_key "medicines", "brands"
+  add_foreign_key "medicine_types", "brands"
   add_foreign_key "medicines", "medicine_types"
   add_foreign_key "stocks", "users"
 end
