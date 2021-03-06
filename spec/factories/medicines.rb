@@ -4,7 +4,6 @@ FactoryBot.define do
     content { Faker::Number.between(from: 20, to: 300) }
     unit { Faker::Lorem.words(number: 1).first }
 
-    brand factory: :brand
     medicine_type factory: :medicine_type
   end
 end
