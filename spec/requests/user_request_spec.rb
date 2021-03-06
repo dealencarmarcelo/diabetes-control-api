@@ -89,12 +89,12 @@ describe Api::V1::UsersController do
 
         context 'when an attribute is invalid' do
             it 'returns unprocessable_entity with invalid first_name' do
-                post api_v1_users_path, params: invalid_params }
+                post api_v1_users_path, params: invalid_params
                 expect(response).to have_http_status(:unprocessable_entity)
             end
         end
 
-        context 'when do not create an user'
+        context 'when do not create an user' do
             it 'return no method error' do
                 expect { created_user.name }.to raise_error(NoMethodError)
             end
