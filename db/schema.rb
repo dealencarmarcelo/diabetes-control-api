@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2021_03_04_055707) do
 
   create_table "medicine_types", force: :cascade do |t|
     t.string "name"
-    t.string "type"
+    t.string "kind"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
