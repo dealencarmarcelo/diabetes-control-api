@@ -20,6 +20,21 @@ describe Api::V1::UsersController do
         }
     end
 
+    let(:invalid_params) do
+        {
+            user: {
+                first_name: nil,
+                surname: Faker::Name.middle_name,
+                email: nil,
+                password: password,
+                password_confirmation: password,
+                phone: Faker::Number.number(digits: 11),
+                birth_date: Faker::Date.between(from: (Date.today - 90.years), to: (Date.today - 18.years)).to_date,
+                diabetes_discovery_date: Faker::Date.between(from: user.birth_date, to: Date.today)
+            }
+        }
+    end
+
     let(:user) { create(:user) }
     
     describe 'get users' do
@@ -72,48 +87,15 @@ describe Api::V1::UsersController do
             it { expect(created_user.first_name).to eq(json.dig(:first_name)) }
         end
 
-        context 'when first_name, surname, phone and email is invalid' do
+        context 'when an attribute is invalid' do
             it 'returns unprocessable_entity with invalid first_name' do
-                post api_v1_users_path, params: { user: { first_name: nil } }
+                post api_v1_users_path, params: invalid_params }
                 expect(response).to have_http_status(:unprocessable_entity)
             end
+        end
 
-            it 'returns unprocessable_entity with invalid surname' do
-                post api_v1_users_path, params: { user: { surname: nil } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with invalid email' do
-                post api_v1_users_path, params: { user: { email: 'email_without_format.com' } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with nil email' do
-                post api_v1_users_path, params: { user: { email: nil } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with nil phone' do
-                post api_v1_users_path, params: { user: { phone: nil } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with invalid phone' do
-                post api_v1_users_path, params: { user: { phone: Faker::Number.number(digits: 9) } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with invalid birth_date' do
-                post api_v1_users_path, params: { user: { birth_date: nil } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'returns unprocessable_entity with invalid diabetes_delivery_date' do
-                post api_v1_users_path, params: { user: { diabetes_delivery_date: nil } }
-                expect(response).to have_http_status(:unprocessable_entity)
-            end
-
-            it 'do not create an user' do
+        context 'when do not create an user'
+            it 'return no method error' do
                 expect { created_user.name }.to raise_error(NoMethodError)
             end
         end
